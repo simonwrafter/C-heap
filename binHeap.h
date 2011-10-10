@@ -24,20 +24,17 @@
 
 #define INITIAL_SIZE 8
 
-struct HeapEntry;
-struct HeapStruct;
+typedef struct HeapEntry  *QueueObject;
 typedef struct HeapStruct *PriorityQueue;
 
 
+PriorityQueue makeHeap(int startSize, int (*comparator)());
 
-PriorityQueue makeHeap();
-PriorityQueue makeHeap(int startSize);
-
-int getSize(PriorityQueue bh);
-int offer(PriorityQueue bh, void **entry);
-void *peek(PriorityQueue bh);
-void *poll(PriorityQueue bh):
-int isEmpty(PriorityQueue bh);
+int getSize(PriorityQueue PQ);
+int offer(PriorityQueue PQ, void *entry);
+void *peek(PriorityQueue PQ);
+void *poll(PriorityQueue PQ);
+int isEmpty(PriorityQueue PQ);
 
 
 #endif

@@ -26,24 +26,21 @@ struct HeapEntry {
 };
 
 struct HeapStruct {
-	HeapEntry *binheap;
+	QueueObject binheap;
 	int (*cmp)();
 	int size;
 	int limit;
 };
 
-PriorityQueue makeHeap(int (*comparator)()) {
-	return makeHeap(INITIAL_SIZE, comparator);
-}
 
 PriorityQueue makeHeap(int startSize, int (*comparator)()) {
-	PriorityQueue PQ;
+	PriorityQueue PQ = malloc(sizeof(struct HeapStruct));
 	
-	if (int startSize < INITIAL_SIZE) {
+	if (startSize < INITIAL_SIZE) {
 		startSize = INITIAL_SIZE;
 	}
 	
-	PQ->binheap = malloc(sizeof(HeapEntry) * startSize);
+	PQ->binheap = malloc(sizeof(struct HeapEntry) * startSize);
 	PQ->size = 0;
 	PQ->limit = INITIAL_SIZE;
 	
@@ -55,19 +52,20 @@ int getSize(PriorityQueue PQ) {
 }
 
 int offer(PriorityQueue PQ, void *newEntry) {
-	HeapEntry HE;
+	QueueObject QO = malloc(sizeof(struct HeapEntry));
 	
 	if (PQ->size == PQ->limit-1){
 		PQ->limit = PQ->size * 2;
-		PQ->binheap = realloc(sizeof(HeapEntry) * PQ->limit);
+		PQ->binheap = realloc(PQ->binheap, sizeof( struct HeapEntry ) * PQ->limit);
 	}
 	
-	HE.index = PQ->size;
-	HE.entry = newEntry;
+	QO->index = PQ->size;
+	QO->entry = newEntry;
 	
-	PQ->binheap[PQ->size] = HE;
-	moveUp(PQ->size);
+	PQ->binheap[PQ->size] = *QO;
+	//moveUp(PQ->size);
 	PQ->size++;
+	return 1;
 }
 
 void *peek(PriorityQueue PQ) {
@@ -75,8 +73,8 @@ void *peek(PriorityQueue PQ) {
 }
 
 void *poll(PriorityQueue PQ) {
-	HeapEntry HE = PQ->binheap[PQ->size - 1];
-	
+	QueueObject QO = PQ->binheap[PQ->size - 1].entry;
+	return QO;
 }
 
 int isEmpty(PriorityQueue PQ) {
